@@ -1,31 +1,46 @@
 import { useState } from "react";
 import { formatDateToMonthYear } from "../lib/utils/formatData";
-import { songData } from "../pages/home";
 import { Button } from "@mui/material";
 import { PlayIcon } from "./Icons";
+import { SongType } from "../lib/redux/features/type";
+import { useDispatch, useSelector } from "react-redux";
+import { play, setCurrentTrack } from "../lib/redux/features/player/playerSlice";
+import { appDispatch, RooTstate } from "../lib/redux/store/store";
+import { getSongs } from "../lib/redux/features/songs/songSlice";
+import { notifyError, notifySuccess, ToastContainerDefault } from "./toast";
+import { useDeleteSongMutation } from "../lib/redux/features/songs/apiSlice";
 
 export default function Song({
+
 	artist,
 	coverPhotoUrl,
 	description,
 	duration,
 	title,
-	updatedAt,
-}: songData) {
+	updatedDate,
+	audioUrl,
+	category,
+	createdDate,
+	id
+
+}: SongType) {
 	const [showPlay, SetShowPlay] = useState(false);
-	const updatedDate = formatDateToMonthYear(updatedAt);
+	const newDate = formatDateToMonthYear(updatedDate);
 	const HandleMouseEnter = () => {
 		SetShowPlay(true);
 	};
 	const HandleMouseLeave = () => {
 		SetShowPlay(false);
 	};
+	const [delSong, { isError: isDelSongError, error: delSongError, isSuccess: isDelSongSuccess }] = useDeleteSongMutation();
+
+	const dispatch: appDispatch = useDispatch();
+	const player = useSelector((state: RooTstate) => state.player);
 	return (
 		<div
 			className="gap-y-4 max-w-52 flex p-4 hover:bg-Bright rounded-md  flex-col relative"
 			onMouseEnter={HandleMouseEnter}
-			onMouseLeave={HandleMouseLeave}
-		>
+			onMouseLeave={HandleMouseLeave}>
 			<div>
 				<img
 					src={coverPhotoUrl}
@@ -42,18 +57,50 @@ export default function Song({
 					<p className="text-[#A7A7A7]">{description}</p>
 				</div>
 				<div className="flex gap-x-2 text-[#89999B] font-light text-sm">
-					<p>{updatedDate}</p>
+					<p>{newDate}</p>
 					<p>&middot;</p>
 					<p>{duration} Min</p>
 				</div>
+
 			</div>
+			{player.isPlaying && player.currentTrack!.id === id && (<img src="https://open.spotifycdn.com/cdn/images/equaliser-animated-green.f5eb96f2.gif" width={30} height={30} />)}
 			<div className="absolute bottom-2 right-0 rounded-full">
-				{showPlay && (
-					<Button>
+				{showPlay && <div className="flex flex-col gap-2">
+					(
+					<Button onClick={() => {
+						dispatch(setCurrentTrack({
+							artist,
+							coverPhotoUrl,
+							description,
+							duration,
+							title,
+							updatedDate,
+							audioUrl,
+							category,
+							createdDate,
+							id
+						}));
+						dispatch(play());
+					}}>
 						<PlayIcon className="rounded-full" />
 					</Button>
-				)}
+					<Button className="hover:bg-[#37d168]" onClick={async () => {
+						await delSong(id);
+						if (isDelSongError) {
+							notifyError(delSongError as string);
+						}
+						if (isDelSongSuccess) {
+							notifySuccess("Song deleted successfully");
+						}
+						dispatch(getSongs());
+
+					}}>
+						<img src="./icons/delete.png" alt="delete" width={30} height={30} />
+					</Button>
+					)
+				</div>}
 			</div>
+			<ToastContainerDefault />
 		</div>
 	);
 }

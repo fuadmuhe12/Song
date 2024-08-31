@@ -7,7 +7,7 @@ export default {
       colors: {
         Bright: '#2a2a2a',
         MainDark: '#000',
-        Middle: "#121212",
+        Middle: "#191919",
         White: '#FFFFFF',
         TextDark: "#B3B3B3",
         TextGray: "#A7A7A7"

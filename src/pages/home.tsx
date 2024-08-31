@@ -1,5 +1,9 @@
+import { useDispatch, useSelector } from "react-redux";
 import Song from "../components/song";
-import { DemoSongData } from "../constant/demo";
+import { } from "../constant/demo";
+import { RooTstate } from "../lib/redux/store/store";
+import { useEffect } from "react";
+import { getSongs } from "../lib/redux/features/songs/songSlice";
 
 export interface songData {
   _id: number;
@@ -10,21 +14,27 @@ export interface songData {
   audioUrl: string;
   category: string;
   duration: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
-
-
-
 export default function Home() {
+  const songs = useSelector((state: RooTstate) => state.songs);
+
+  const dispatch = useDispatch();
+  console.log(songs);
+  useEffect(() => {
+    dispatch(getSongs());
+  }, [])
+  if (songs.songs.length === 0) {
+    return <p className=" text-center fixed top-1/2 text-white left-1/3">No songs available at the moment. To add songs go to the add song page</p>
+  }
   return (
     <div className="grid grid-cols-auto-fill gap-1">
-      {DemoSongData.map((song, ind) => {
+      {songs.songs.map((song, ind) => {
         return (
-          <Song {...song} key={ind} />
+          <Song key={ind} {...song} />
         )
       })}
-
     </div>
   )
 }

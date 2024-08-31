@@ -1,4 +1,4 @@
-export function formatDateToMonthYear(dateString: string): string {
+export function formatDateToMonthYear(dateString: Date): string {
   const date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
