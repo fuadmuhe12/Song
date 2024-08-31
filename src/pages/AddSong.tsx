@@ -60,6 +60,7 @@ export default function AddSong() {
                 categoryId: 1
             });
             reset();
+
             notifySuccess("Song uploaded successfully")
         } catch {
             notifyError("Failed to upload add song")

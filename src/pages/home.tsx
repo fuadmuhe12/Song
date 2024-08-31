@@ -29,7 +29,7 @@ export default function Home() {
     return <p className=" text-center fixed top-1/2 text-white left-1/3">No songs available at the moment. To add songs go to the add song page</p>
   }
   return (
-    <div className="grid grid-cols-auto-fill gap-1">
+    <div className="grid grid-cols-auto-fill gap-1 pb-14">
       {songs.songs.map((song, ind) => {
         return (
           <Song key={ind} {...song} />
