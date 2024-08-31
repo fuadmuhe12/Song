@@ -8,6 +8,6 @@ export default function Loader() {
     const [, { isLoading: isUpdating }] = useUpdateSongMutation();
     const { isLoading: isFetching } = useGetCateogriesQuery();
     return (
-        isLoading || isUpdating || isFetching || loadingSong ? (<div className='fixed left-1/2 top-1/2'><img src="./icons/spinner.gif" alt="loader" /></div>) : <></>
+        isLoading || isUpdating || isFetching || loadingSong ? (<div className='fixed left-1/2 z-50 top-1/2'><img src="./icons/spinner.gif" alt="loader" /></div>) : <></>
     )
 }

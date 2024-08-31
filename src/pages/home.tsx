@@ -29,10 +29,10 @@ export default function Home() {
 
   }, [])
   if (songs.songs.length === 0) {
-    return <p className=" text-center fixed top-1/2 text-white left-1/3">No songs available at the moment. To add songs go to the add song page</p>
+    return <p className=" text-center fixed top-1/2 text-white left-1/3">No song is available</p>
   }
   return (
-    <div className="grid grid-cols-auto-fill gap-1 pb-14 ">
+    <div className="grid grid-cols-auto-fill gap-3  pb-24">
       {songs.songs.map((song, ind) => {
         return (
           <Song key={ind} {...song} />

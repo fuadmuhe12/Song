@@ -40,11 +40,11 @@ export default function Song({
 	useEffect(() => {
 		if (isDelSongSuccess) {
 			notifySuccess("Song deleted successfully");
+			dispatch(getSongs({ categoryID: null, search: null }));
 		} else {
 			notifyError(delSongError as string);
 		};
-
-	}, [delSongError, isDelSongError, isDelSongSuccess]);
+	}, [delSongError, dispatch, isDelSongError, isDelSongSuccess]);
 
 	return (
 		<div
@@ -58,6 +58,7 @@ export default function Song({
 					alt="cover image"
 					width={175}
 					height={175}
+
 					className="rounded-md object-cover"
 				/>
 				{player.isPlaying && player.currentTrack!.id === id && (
@@ -138,7 +139,7 @@ export default function Song({
 						if (isDelSongSuccess) {
 							notifySuccess("Song deleted successfully");
 						}
-						dispatch(getSongs({ categoryID: null, search: undefined }));
+						dispatch(getSongs({ categoryID: null, search: null }));
 					}}>
 						<img src="./icons/delete.png" alt="delete" width={24} height={24} />
 					</Button>

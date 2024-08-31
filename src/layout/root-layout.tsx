@@ -53,7 +53,7 @@ export default function RootLayout() {
 						<SearchFeature />
 					</div>
 				</div>
-				<div className="contentSpace rounded-lg ">
+				<div className="contentSpace rounded-lg  ">
 					<Outlet />
 				</div>
 			</div>

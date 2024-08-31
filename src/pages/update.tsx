@@ -3,7 +3,7 @@ import { UploadAudio, UploadImage } from "../lib/utils/uploadImage";
 import 'react-toastify/dist/ReactToastify.css';
 import { notifyError, notifySuccess, ToastContainerDefault } from "../components/toast";
 import { useGetCateogriesQuery, useGetSongByIdQuery, useUpdateSongMutation } from "../lib/redux/features/songs/apiSlice";
-import { useParams } from "react-router-dom";
+import { redirect, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { isAudioType, isImageType } from "../lib/utils/EnsureExtension";
 
@@ -75,6 +75,8 @@ export default function UpdateSong() {
         if (!responce.error) {
             notifySuccess("Song updated successfully")
         }
+
+        redirect('/')
     };
     useEffect(() => {
         if (isGetDataSuccuss) {

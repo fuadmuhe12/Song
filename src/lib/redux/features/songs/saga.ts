@@ -44,7 +44,7 @@ export function* DeleteSongSaga({ payload: id }: PayloadAction<number>) {
 
 // #region API Calls
 const fetchSongs = async (categoryID: number | undefined, search: string | undefined) => {
-    const response: AxiosResponse<MultipleAPIResponse> = await axios.get(`${API_BASE_URL}song?CategoryId=${categoryID}&Search=${search}`);
+    const response: AxiosResponse<MultipleAPIResponse> = await axios.get(`${API_BASE_URL}song?${categoryID ? `categoryID=${categoryID}` : ""}${search ? `&search=${search}` : ""}`);
     return response.data;
 }
 const deleteSongApi = async (id: number) => {

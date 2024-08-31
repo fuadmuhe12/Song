@@ -27,15 +27,17 @@ const SongPlayer = () => {
   const handleNextSong = () => {
     dispatch(playPause(false));
     dispatch(nextSong());
+    dispatch(playPause(true));
   };
 
   const handlePrevSong = () => {
     dispatch(playPause(false));
     dispatch(prevSong());
+    dispatch(playPause(true));
   };
 
   return (
-    <div className=" sm:px-12 -ml-1 fixed bottom-0 w-full flex py-1 items-center justify-between backdrop-blur-md bg-[#545353]">
+    <div className=" sm:px-12 -ml-1 fixed bottom-0 w-full flex py-1 z-50 items-center justify-between backdrop-blur-md bg-[#545353]">
       <Track isPlaying={isPlaying} isActive={isActive} activeSong={currentTrack} />
       <div className="flex-1 flex flex-col items-center justify-center">
         <Controls

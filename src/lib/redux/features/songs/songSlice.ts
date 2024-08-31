@@ -11,7 +11,7 @@ const songSlice = createSlice({
     reducers: {
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        getSongs: (state, action: PayloadAction<{ categoryID: number | null, search: string | undefined }>) => {
+        getSongs: (state, action: PayloadAction<{ categoryID: number | null, search: string | null }>) => {
             state.isLoading = true;
             state.error = null
             action.payload = { categoryID: action.payload.categoryID, search: action.payload.search }
