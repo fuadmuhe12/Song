@@ -138,7 +138,7 @@ export default function Song({
 						if (isDelSongSuccess) {
 							notifySuccess("Song deleted successfully");
 						}
-						dispatch(getSongs({ categoryID: undefined, search: undefined }));
+						dispatch(getSongs({ categoryID: null, search: undefined }));
 					}}>
 						<img src="./icons/delete.png" alt="delete" width={24} height={24} />
 					</Button>

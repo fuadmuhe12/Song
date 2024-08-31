@@ -24,7 +24,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    dispatch(getSongs());
+    dispatch(getSongs({ categoryID: null, search: "" }));
 
 
   }, [])
