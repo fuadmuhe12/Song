@@ -8,9 +8,10 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { setSongList } from "../player/playerSlice";
 
 // #region Sagas
-export function* GetSongsSaga() {
+export function* GetSongsSaga({ payload }: PayloadAction<{ categoryID: number | undefined, search: string | undefined }>) {
     try {
-        const response: MultipleAPIResponse = yield call(fetchSongs);
+        console.log(payload, "payload+++++++++++++")
+        const response: MultipleAPIResponse = yield call(fetchSongs, payload.categoryID, payload.search);
         if (!response.isSuccess) {
             yield put(getSongsFail(response.error || "Failed to fetch songs"));
         }
@@ -42,8 +43,8 @@ export function* DeleteSongSaga({ payload: id }: PayloadAction<number>) {
 
 
 // #region API Calls
-const fetchSongs = async () => {
-    const response: AxiosResponse<MultipleAPIResponse> = await axios.get(`${API_BASE_URL}song`);
+const fetchSongs = async (categoryID: number | undefined, search: string | undefined) => {
+    const response: AxiosResponse<MultipleAPIResponse> = await axios.get(`${API_BASE_URL}song?CategoryId=${categoryID}&Search=${search}`);
     return response.data;
 }
 const deleteSongApi = async (id: number) => {

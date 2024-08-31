@@ -1,3 +1,4 @@
+//#region Song Types
 export type SongType = {
     id: number;
     title: string;
@@ -16,13 +17,16 @@ export interface Category {
     name: string;
 }
 
+
 export type SongSliceState = {
     songs: SongType[];
     isLoading: boolean;
     error: string | null;
 }
 export const SONGS = 'songs';
+/// #endregion 
 
+// #region API Types
 
 export type SingleAPIResponse = {
     data: SongType | null;
@@ -39,7 +43,10 @@ export type CategoryAPIResponse = {
     error: string | null;
     isSuccess: boolean;
 }
+// #Endregion
 
+
+// #region Player Types
 export type playerSliceState = {
     isPlaying: boolean;
     volume: number;
@@ -54,3 +61,14 @@ export type playerSliceState = {
 
 export const PLAYER = 'player';
 
+// #endregion
+
+
+//#region Filter Types
+
+export type FilterStateType = {
+    search: string | undefined;
+    categoryID: number | undefined;
+}
+
+export const FILTER = 'filter';

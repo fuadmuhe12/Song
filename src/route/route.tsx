@@ -3,7 +3,7 @@ import ErrorPage from "../pages/error-page";
 import Home from "../pages/home";
 import RootLayout from "../layout/root-layout";
 import AddSong from "../pages/AddSong";
-import UpdateSong from "../components/update";
+import UpdateSong from "../pages/update";
 
 export const router = createBrowserRouter([
     {
@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
                 element: <AddSong />,
             },
             {
-                path: "/updated-song/:id",
+                path: "/update-song/:id",
                 element: <UpdateSong />
             }
 

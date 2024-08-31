@@ -18,40 +18,37 @@ type typeOfSong = {
 };
 
 export default function AddSong() {
-
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting, },
+        formState: { errors, isSubmitting },
         setError,
-        reset
+        reset,
     } = useForm<typeOfSong>();
     const { data: catagoryData } = useGetCateogriesQuery();
 
-
     const onSubmit: SubmitHandler<typeOfSong> = async (data) => {
-
-        const ImageResult = await UploadImage(data.coverPhotoUrl[0])
-        const AudioResult = await UploadAudio(data.audioUrl[0])
+        const ImageResult = await UploadImage(data.coverPhotoUrl[0]);
+        const AudioResult = await UploadAudio(data.audioUrl[0]);
 
         if (!ImageResult.isSuccuss) {
             setError("coverPhotoUrl", {
                 type: "manual",
-                message: ImageResult.errorMessge!
-            })
+                message: ImageResult.errorMessge!,
+            });
             notifyError(ImageResult.errorMessge!);
-            return
+            return;
         }
         if (!AudioResult.isSuccuss) {
             setError("audioUrl", {
                 type: "manual",
-                message: AudioResult.errorMessge!
-            })
-            notifyError(AudioResult.errorMessge!)
-            return
+                message: AudioResult.errorMessge!,
+            });
+            notifyError(AudioResult.errorMessge!);
+            return;
         }
         try {
-            axios.post(API_BASE_URL + "song", {
+            await axios.post(API_BASE_URL + "song", {
                 title: data.title,
                 artist: data.artist,
                 duration: data.duration,
@@ -59,165 +56,148 @@ export default function AddSong() {
                 description: data.description,
                 coverPhotoUrl: ImageResult.url,
                 audioUrl: AudioResult.url,
-                categoryId: 1
+                categoryId: data.catagory,
             });
             reset();
-
-            notifySuccess("Song uploaded successfully")
+            notifySuccess("Song uploaded successfully");
         } catch {
-            notifyError("Failed to upload add song")
+            notifyError("Failed to upload song");
         }
     };
+
     return (
-        <div>
-            <form
-                className="text-White max-w-[600px] px-4 py-3"
-                onSubmit={handleSubmit(onSubmit)}>
-                <div className="grid  md:grid-cols-2  gap-x-3 gap-y-3">
-                    <div className="flex flex-col">
-                        <label className="pb-2" htmlFor="title">
-                            Title
-                        </label>
-                        <input
-                            {...register("title", { required: true })}
-                            type="text"
-                            name="title"
-                            id="title"
-                            disabled={isSubmitting}
-                            required
-                            className="outline-none rounded-sm text-gray-700"
-                        />
-
+        <div className="bg-gray-900 min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+            <div className="max-w-lg w-full space-y-8 bg-gray-800 p-10 rounded-xl shadow-md">
+                <h2 className="text-center text-3xl font-extrabold text-white">Add New Song</h2>
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300" htmlFor="title">
+                                Title
+                            </label>
+                            <input
+                                {...register("title", { required: true })}
+                                type="text"
+                                id="title"
+                                disabled={isSubmitting}
+                                required
+                                className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300" htmlFor="artist">
+                                Artist
+                            </label>
+                            <input
+                                {...register("artist", { required: true })}
+                                type="text"
+                                id="artist"
+                                disabled={isSubmitting}
+                                required
+                                className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300" htmlFor="duration">
+                                Duration (in seconds)
+                            </label>
+                            <input
+                                {...register("duration", { required: true })}
+                                type="number"
+                                id="duration"
+                                required
+                                disabled={isSubmitting}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300" htmlFor="catagory">
+                                Category
+                            </label>
+                            <select
+                                {...register("catagory", { required: true })}
+                                id="catagory"
+                                disabled={isSubmitting}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                {catagoryData?.data?.map((catagory) => (
+                                    <option value={catagory.id} key={catagory.id}>
+                                        {catagory.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
-                    <div className="flex flex-col">
-                        <label className="pb-2" htmlFor="artist">
-                            Artist
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300" htmlFor="description">
+                            Description
                         </label>
-                        <input
-                            {...register("artist", { required: true })}
-                            type="text"
-                            name="artist"
-                            id="artist"
+                        <textarea
+                            {...register("description", { required: true, maxLength: 100 })}
+                            id="description"
                             disabled={isSubmitting}
-                            required
-                            className="outline-none rounded-sm text-gray-700"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500"
                         />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="pb-2" htmlFor="duration">
-                            Duration
-                        </label>
-                        <input
-                            {...register("duration", { required: true })}
-                            type="number"
-                            name="duration"
-                            id="duration"
-                            required
-                            disabled={isSubmitting}
-                            className="outline-none rounded-sm text-gray-700"
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="pb-2" htmlFor="catagory">
-                            Catagory
-                        </label>
-                        <select
-                            disabled={isSubmitting}
-                            name="catagory"
-                            id="catagory"
-                            className="outline-none text-gray-700"
-                        >
-                            {catagoryData?.data?.map((catagory) => {
-                                return <option value={catagory.id} key={catagory.id}>{catagory.name}</option>
-                            })}
-                        </select>
-                    </div>
-                </div>
-                <div className="flex flex-col">
-                    <label className="pb-2" htmlFor="description">
-                        Description
-                    </label>
-                    <textarea
-                        disabled={isSubmitting}
-                        id="description"
-                        {...register("description", { required: true, max: 100 })}
-                        className="outline-none rounded-sm text-gray-700"
-                    />
-                    {errors.description && (
-                        <span className="text-red-500">
-                            {errors.description.message}
-                        </span>
-                    )}
-                </div>
-                <div className="pb-3 flex flex-col  md:flex-row gap-3 py-3">
-                    <div className="flex flex-col">
-                        <label className="pb-2" htmlFor="coverPhotoUrl">
-                            Cover Photo
-                        </label>
-                        <input
-                            disabled={isSubmitting}
-                            {...register("coverPhotoUrl", {
-                                required: true, validate: {
-                                    isImage: (files) => {
-                                        return isImageType(files[0])
-                                    }
-                                }
-                            })}
-                            type="file"
-                            name="coverPhotoUrl"
-                            id="coverPhotoUrl"
-                            required
-                            className="outline-none rounded-sm text-gray-700"
-                        />
-                        {errors.coverPhotoUrl && (
-                            <span className="text-red-500">
-                                {errors.coverPhotoUrl.message}
-                            </span>
+                        {errors.description && (
+                            <span className="text-red-500 text-sm">{errors.description.message}</span>
                         )}
                     </div>
-                    <div className="flex flex-col">
-                        <label className="pb-2" htmlFor="audioUrl">
-                            Audio
-                        </label>
-                        <input
-                            disabled={isSubmitting}
-                            {...register("audioUrl", {
-                                required: true,
-                                validate: {
-                                    isAudio: (files: FileList) => {
-                                        const file = files[0];
-                                        return isAudioType(file);
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300" htmlFor="coverPhotoUrl">
+                                Cover Photo
+                            </label>
+                            <input
+                                {...register("coverPhotoUrl", {
+                                    required: true,
+                                    validate: {
+                                        isImage: (files) => isImageType(files[0]),
                                     },
-                                },
-                            })}
-                            type="file"
-                            name="audioUrl"
-                            id="audioUrl"
-                            required
-                            className="outline-none rounded-sm text-gray-700"
-                        />
-                        {errors.audioUrl && (
-                            <span className="text-red-500">
-                                {errors.audioUrl.message}
-                            </span>
-                        )}
+                                })}
+                                type="file"
+                                id="coverPhotoUrl"
+                                disabled={isSubmitting}
+                                required
+                                className="mt-1 block w-full text-gray-300 px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                            {errors.coverPhotoUrl && (
+                                <span className="text-red-500 text-sm">{errors.coverPhotoUrl.message}</span>
+                            )}
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300" htmlFor="audioUrl">
+                                Audio File
+                            </label>
+                            <input
+                                {...register("audioUrl", {
+                                    required: true,
+                                    validate: {
+                                        isAudio: (files: FileList) => isAudioType(files[0]),
+                                    },
+                                })}
+                                type="file"
+                                id="audioUrl"
+                                disabled={isSubmitting}
+                                required
+                                className="mt-1 block w-full text-gray-300 px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                            {errors.audioUrl && (
+                                <span className="text-red-500 text-sm">{errors.audioUrl.message}</span>
+                            )}
+                        </div>
                     </div>
-                </div>
-                <div className=" flex justify-center py-6 ">
-                    <button
-                        disabled={isSubmitting}
-                        className="mt-4 mx-auto self-center px-10 py-3 rounded-lg bg-blue-500 transition-all hover:bg-blue-700"
-                        type="submit"
-                    >
-                        {isSubmitting ? "Uploading..." : "Upload"}
-
-
-                    </button>
-                </div>
-            </form>
-            <ToastContainerDefault />
+                    <div className="flex justify-center">
+                        <button
+                            disabled={isSubmitting}
+                            className="mt-6 w-full inline-flex justify-center py-3 px-6 border border-transparent text-lg font-medium rounded-md text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+                            type="submit"
+                        >
+                            {isSubmitting ? "Uploading..." : "Upload"}
+                        </button>
+                    </div>
+                </form>
+                <ToastContainerDefault />
+            </div>
         </div>
-
-
     );
 }

@@ -48,8 +48,8 @@ export default function RootLayout() {
 				className={`RightSide w-full flex flex-col gap-2  overflow-auto`}
 				style={{ maxHeight: height }}
 			>
-				<div className="HeaderNav bg-Middle h-[50px] md:h-[80px] rounded-lg flex items-center pl-[20px] md:pl[50px] flex-shrink-0">
-					<div>
+				<div className="HeaderNav bg-Middle  w-full h-[50px] md:h-[80px] rounded-lg flex items-center pl-[20px] md:pl[50px] flex-shrink-0">
+					<div className="w-full">
 						<SearchFeature />
 					</div>
 				</div>

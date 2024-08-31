@@ -9,9 +9,12 @@ const songSlice = createSlice({
     name: SONGS,
     initialState,
     reducers: {
-        getSongs: (state) => {
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        getSongs: (state, action: PayloadAction<{ categoryID: number | undefined, search: string | undefined }>) => {
             state.isLoading = true;
             state.error = null
+
         },
         getSongsSuccess: (state, action: PayloadAction<SongType[]>) => {
             state.isLoading = false;
@@ -22,7 +25,6 @@ const songSlice = createSlice({
             state.isLoading = false;
             state.error = action.payload;
         },
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         deleteSongRed: (state, { payload: id }: PayloadAction<number>) => {
             state.error = null;
             state.isLoading = true;
