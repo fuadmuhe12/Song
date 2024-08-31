@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { CiCircleRemove } from "react-icons/ci";
 
-import { nextSong, prevSong, playPause, setVolume, setDuration } from '../../lib/redux/features/player/playerSlice';
+import { nextSong, prevSong, playPause, setVolume, setDuration, resetSemi } from '../../lib/redux/features/player/playerSlice';
 import Controls from './Controls';
 import Player from './Player';
 import Seekbar from './Seekbar';
@@ -38,8 +39,13 @@ const SongPlayer = () => {
 
   return (
     <div className=" sm:px-12 -ml-1 fixed bottom-0 w-full flex py-1 z-50 items-center justify-between backdrop-blur-md bg-[#545353]">
+      <div className='absolute top-2 right-2 cursor-pointer' onClick={() => { dispatch(resetSemi()) }}>
+        <CiCircleRemove className='text-red-500 w-6 h-6' />
+
+      </div>
       <Track isPlaying={isPlaying} isActive={isActive} activeSong={currentTrack} />
-      <div className="flex-1 flex flex-col items-center justify-center">
+      <div className="flex-1 flex flex-col items-center justify-center relative">
+
         <Controls
           handlePlayPause={handlePlayPause}
           handlePrevSong={handlePrevSong}
