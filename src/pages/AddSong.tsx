@@ -5,6 +5,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../lib/constants";
 import 'react-toastify/dist/ReactToastify.css';
 import { notifyError, notifySuccess, ToastContainerDefault } from "../components/toast";
+import { useGetCateogriesQuery } from "../lib/redux/features/songs/apiSlice";
 
 type typeOfSong = {
     title: string;
@@ -25,6 +26,7 @@ export default function AddSong() {
         setError,
         reset
     } = useForm<typeOfSong>();
+    const { data: catagoryData } = useGetCateogriesQuery();
 
 
     const onSubmit: SubmitHandler<typeOfSong> = async (data) => {
@@ -125,11 +127,9 @@ export default function AddSong() {
                             id="catagory"
                             className="outline-none text-gray-700"
                         >
-                            <option value="catagory 1" selected>
-                                catagory 1
-                            </option>
-                            <option value="catagory 2">catagory 2</option>
-                            <option value="catagory 3">catagory 3</option>
+                            {catagoryData?.data?.map((catagory) => {
+                                return <option value={catagory.id} key={catagory.id}>{catagory.name}</option>
+                            })}
                         </select>
                     </div>
                 </div>

@@ -9,6 +9,9 @@ import { appDispatch, RooTstate } from "../lib/redux/store/store";
 import { getSongs } from "../lib/redux/features/songs/songSlice";
 import { notifyError, notifySuccess, ToastContainerDefault } from "./toast";
 import { useDeleteSongMutation } from "../lib/redux/features/songs/apiSlice";
+import { MdEditDocument } from "react-icons/md";
+import { Link } from "react-router-dom";
+
 
 export default function Song({
 	artist,
@@ -97,6 +100,11 @@ export default function Song({
 					}}>
 						<img src="./icons/delete.png" alt="delete" width={30} height={30} />
 					</Button>
+					<Link to={`/updated-song/${id}`} >
+						<Button >
+							<MdEditDocument className="text-[#37d168] w-8 h-8" />
+						</Button>
+					</Link>
 
 				</div>}
 			</div>

@@ -1,69 +1,88 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { isAudioType, isImageType } from "../lib/utils/EnsureExtension";
 import { UploadAudio, UploadImage } from "../lib/utils/uploadImage";
-import axios from "axios";
-import { API_BASE_URL } from "../lib/constants";
 import 'react-toastify/dist/ReactToastify.css';
 import { notifyError, notifySuccess, ToastContainerDefault } from "../components/toast";
+import { useGetCateogriesQuery, useGetSongByIdQuery, useUpdateSongMutation } from "../lib/redux/features/songs/apiSlice";
+import { useParams } from "react-router-dom";
 
-type typeOfSong = {
-    title: string;
-    artist: string;
-    duration: number;
-    catagory: string;
-    description: string;
-    coverPhotoUrl: FileList;
-    audioUrl: FileList;
+
+type typeOfSongUpdate = {
+    title: string | undefined;
+    artist: string | undefined;
+    duration: number | undefined;
+    catagory: string | undefined;
+    description: string | undefined;
+    coverPhotoUrl: FileList | undefined;
+    audioUrl: FileList | undefined;
 };
 
-export default function AddSong() {
+export default function UpdateSong() {
+    const l = useParams();
+    const id = l.id;
+    const { data: getData, isError: IsgetDataError, isSuccess: isGetDataSuccuss } = useGetSongByIdQuery(parseFloat(id!));
+    const { data: catagoryData } = useGetCateogriesQuery();
 
+
+    const [updateSong,] = useUpdateSongMutation();
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting, },
         setError,
-        reset
-    } = useForm<typeOfSong>();
+        setValue
 
+    } = useForm<typeOfSongUpdate>();
 
-    const onSubmit: SubmitHandler<typeOfSong> = async (data) => {
-
-        const ImageResult = await UploadImage(data.coverPhotoUrl[0])
-        const AudioResult = await UploadAudio(data.audioUrl[0])
-
-        if (!ImageResult.isSuccuss) {
-            setError("coverPhotoUrl", {
-                type: "manual",
-                message: ImageResult.errorMessge!
-            })
-            notifyError(ImageResult.errorMessge!);
-            return
+    if (IsgetDataError) {
+        notifyError("An error occured while fetching song data")
+    }
+    else {
+        if (isGetDataSuccuss) {
+            const song = getData?.data;
+            setValue("title", song?.title)
+            setValue("artist", song?.artist)
+            setValue("duration", song?.duration)
+            setValue("description", song?.description)
         }
-        if (!AudioResult.isSuccuss) {
-            setError("audioUrl", {
-                type: "manual",
-                message: AudioResult.errorMessge!
-            })
-            notifyError(AudioResult.errorMessge!)
-            return
+    }
+    const onSubmit: SubmitHandler<typeOfSongUpdate> = async (data) => {
+        console.log(data)
+        let imgUrl;
+        let audioUrl;
+        const ImageResult = data.coverPhotoUrl?.length != 0 ? await UploadImage(data.coverPhotoUrl![0]) : undefined
+        const AudioResult = data.audioUrl?.length != 0 ? await UploadAudio(data.audioUrl![0]) : undefined
+        if (ImageResult != undefined) {
+            if (!ImageResult.isSuccuss) {
+                setError("coverPhotoUrl", {
+                    type: "manual",
+                    message: ImageResult?.errorMessge as string
+                })
+                notifyError(ImageResult?.errorMessge as string);
+                return
+            }
+            imgUrl = ImageResult.url
         }
-        try {
-            axios.post(API_BASE_URL + "song", {
-                title: data.title,
-                artist: data.artist,
-                duration: data.duration,
-                catagory: data.catagory,
-                description: data.description,
-                coverPhotoUrl: ImageResult.url,
-                audioUrl: AudioResult.url,
-                categoryId: 1
-            });
-            reset();
 
-            notifySuccess("Song uploaded successfully")
-        } catch {
-            notifyError("Failed to upload add song")
+
+
+        if (AudioResult != undefined) {
+            if (!AudioResult.isSuccuss) {
+                setError("audioUrl", {
+                    type: "manual",
+                    message: AudioResult.errorMessge!
+                })
+                notifyError(AudioResult.errorMessge!)
+                return
+            }
+            audioUrl = AudioResult.url
+        }
+
+        const responce = await updateSong({ id: parseFloat(id!) || 1, data: { coverPhotoUrl: imgUrl, audioUrl: audioUrl, artist: data.artist, catagory: data.catagory, description: data.description, duration: data.duration, title: data.title } }).unwrap();
+        if (responce.error) {
+            notifyError(responce.error)
+        }
+        if (!responce.error) {
+            notifySuccess("Song updated successfully")
         }
     };
     return (
@@ -77,12 +96,12 @@ export default function AddSong() {
                             Title
                         </label>
                         <input
-                            {...register("title", { required: true })}
+                            {...register("title", {})}
                             type="text"
                             name="title"
                             id="title"
                             disabled={isSubmitting}
-                            required
+
                             className="outline-none rounded-sm text-gray-700"
                         />
 
@@ -92,12 +111,12 @@ export default function AddSong() {
                             Artist
                         </label>
                         <input
-                            {...register("artist", { required: true })}
+                            {...register("artist", {})}
                             type="text"
                             name="artist"
                             id="artist"
                             disabled={isSubmitting}
-                            required
+
                             className="outline-none rounded-sm text-gray-700"
                         />
                     </div>
@@ -106,11 +125,11 @@ export default function AddSong() {
                             Duration
                         </label>
                         <input
-                            {...register("duration", { required: true })}
+                            {...register("duration", {})}
                             type="number"
                             name="duration"
                             id="duration"
-                            required
+
                             disabled={isSubmitting}
                             className="outline-none rounded-sm text-gray-700"
                         />
@@ -123,13 +142,10 @@ export default function AddSong() {
                             disabled={isSubmitting}
                             name="catagory"
                             id="catagory"
-                            className="outline-none text-gray-700"
-                        >
-                            <option value="catagory 1" selected>
-                                catagory 1
-                            </option>
-                            <option value="catagory 2">catagory 2</option>
-                            <option value="catagory 3">catagory 3</option>
+                            className="outline-none text-gray-700">
+                            {catagoryData?.data?.map((catagory) => {
+                                return <option value={catagory.id} key={catagory.id}>{catagory.name}</option>
+                            })}
                         </select>
                     </div>
                 </div>
@@ -140,7 +156,7 @@ export default function AddSong() {
                     <textarea
                         disabled={isSubmitting}
                         id="description"
-                        {...register("description", { required: true, max: 100 })}
+                        {...register("description", { max: 100 })}
                         className="outline-none rounded-sm text-gray-700"
                     />
                     {errors.description && (
@@ -157,16 +173,12 @@ export default function AddSong() {
                         <input
                             disabled={isSubmitting}
                             {...register("coverPhotoUrl", {
-                                required: true, validate: {
-                                    isImage: (files) => {
-                                        return isImageType(files[0])
-                                    }
-                                }
+                                required: false
                             })}
                             type="file"
                             name="coverPhotoUrl"
                             id="coverPhotoUrl"
-                            required
+
                             className="outline-none rounded-sm text-gray-700"
                         />
                         {errors.coverPhotoUrl && (
@@ -182,18 +194,12 @@ export default function AddSong() {
                         <input
                             disabled={isSubmitting}
                             {...register("audioUrl", {
-                                required: true,
-                                validate: {
-                                    isAudio: (files: FileList) => {
-                                        const file = files[0];
-                                        return isAudioType(file);
-                                    },
-                                },
+                                required: false
                             })}
                             type="file"
                             name="audioUrl"
                             id="audioUrl"
-                            required
+
                             className="outline-none rounded-sm text-gray-700"
                         />
                         {errors.audioUrl && (
@@ -209,7 +215,7 @@ export default function AddSong() {
                         className="mt-4 mx-auto self-center px-10 py-3 rounded-lg bg-blue-500 transition-all hover:bg-blue-700"
                         type="submit"
                     >
-                        {isSubmitting ? "Uploading..." : "Upload"}
+                        {isSubmitting ? "Updating..." : "Update"}
 
 
                     </button>
