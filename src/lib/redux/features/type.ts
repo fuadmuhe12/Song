@@ -46,6 +46,10 @@ export type playerSliceState = {
     currentTime: number;
     duration: number;
     currentTrack: SongType | null;
+    isActive: boolean;
+    repeat: boolean;
+    shuffle: boolean;
+    songList: SongType[];
 }
 
 export const PLAYER = 'player';

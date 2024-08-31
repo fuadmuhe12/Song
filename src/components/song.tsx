@@ -4,14 +4,13 @@ import { Button } from "@mui/material";
 import { PlayIcon } from "./Icons";
 import { SongType } from "../lib/redux/features/type";
 import { useDispatch, useSelector } from "react-redux";
-import { play, setCurrentTrack } from "../lib/redux/features/player/playerSlice";
+import { playPause, setCurrentTrack, setSongList } from "../lib/redux/features/player/playerSlice";
 import { appDispatch, RooTstate } from "../lib/redux/store/store";
 import { getSongs } from "../lib/redux/features/songs/songSlice";
 import { notifyError, notifySuccess, ToastContainerDefault } from "./toast";
 import { useDeleteSongMutation } from "../lib/redux/features/songs/apiSlice";
 
 export default function Song({
-
 	artist,
 	coverPhotoUrl,
 	description,
@@ -22,7 +21,6 @@ export default function Song({
 	category,
 	createdDate,
 	id
-
 }: SongType) {
 	const [showPlay, SetShowPlay] = useState(false);
 	const newDate = formatDateToMonthYear(updatedDate);
@@ -35,7 +33,9 @@ export default function Song({
 	const [delSong, { isError: isDelSongError, error: delSongError, isSuccess: isDelSongSuccess }] = useDeleteSongMutation();
 
 	const dispatch: appDispatch = useDispatch();
+
 	const player = useSelector((state: RooTstate) => state.player);
+	const songs = useSelector((state: RooTstate) => state.songs)
 	return (
 		<div
 			className="gap-y-4 max-w-52 flex p-4 hover:bg-Bright rounded-md  flex-col relative"
@@ -66,8 +66,8 @@ export default function Song({
 			{player.isPlaying && player.currentTrack!.id === id && (<img src="https://open.spotifycdn.com/cdn/images/equaliser-animated-green.f5eb96f2.gif" width={30} height={30} />)}
 			<div className="absolute bottom-2 right-0 rounded-full">
 				{showPlay && <div className="flex flex-col gap-2">
-					(
 					<Button onClick={() => {
+						dispatch(setSongList(songs.songs || []))
 						dispatch(setCurrentTrack({
 							artist,
 							coverPhotoUrl,
@@ -80,7 +80,7 @@ export default function Song({
 							createdDate,
 							id
 						}));
-						dispatch(play());
+						dispatch(playPause(true));
 					}}>
 						<PlayIcon className="rounded-full" />
 					</Button>
@@ -97,7 +97,7 @@ export default function Song({
 					}}>
 						<img src="./icons/delete.png" alt="delete" width={30} height={30} />
 					</Button>
-					)
+
 				</div>}
 			</div>
 			<ToastContainerDefault />

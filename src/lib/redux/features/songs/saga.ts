@@ -5,6 +5,7 @@ import { MultipleAPIResponse } from "../type";
 import axios from "axios";
 import { API_BASE_URL } from "../../../constants";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { setSongList } from "../player/playerSlice";
 
 // #region Sagas
 export function* GetSongsSaga() {
@@ -15,6 +16,7 @@ export function* GetSongsSaga() {
         }
         else {
             yield put(getSongsSuccess(response.data!));
+            setSongList(response.data! || [])
         }
     } catch (error) {
         yield put(getSongsFail(error as string || "Failed to fetch songs"));

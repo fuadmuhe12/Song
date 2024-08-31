@@ -2,10 +2,10 @@ import { NavLink, Outlet } from "react-router-dom";
 import SearchFeature from "../components/search";
 import { AddIcon, HomeIcon } from "../components/Icons";
 import { useEffect, useState } from "react";
-import Player from "../components/player";
 import { RooTstate } from "../lib/redux/store/store";
 import { useSelector } from "react-redux";
 import Loader from "../components/loader";
+import SongPlayer from "../components/SongPlayer";
 
 export default function RootLayout() {
 	const [height, setheight] = useState(0);
@@ -19,7 +19,7 @@ export default function RootLayout() {
 
 	return (
 		<div className="wrapper flex max-w-[1440px] mx-auto min-h-screen gap-2 px-1 py-2">
-			{player.isPlaying && <Player audioUrl={player.currentTrack!.audioUrl} />}
+			{player.isActive && <SongPlayer />}
 			<Loader />
 
 			<div className="SideBar basis-1/5 flex flex-col gap-y-2" style={{ height: height }}>
