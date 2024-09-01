@@ -40,7 +40,9 @@ const SongPlayer = () => {
   return (
     <div className=" sm:px-12 -ml-1 fixed bottom-0 w-full flex py-1 z-50 items-center justify-between backdrop-blur-md bg-[#545353]">
       <div className='absolute top-2 right-2 cursor-pointer' onClick={() => { dispatch(resetSemi()) }}>
-        <CiCircleRemove className='text-red-500 w-6 h-6' />
+        <button>
+          <CiCircleRemove className='text-red-500 w-6 h-6' />
+        </button>
 
       </div>
       <Track isPlaying={isPlaying} isActive={isActive} activeSong={currentTrack} />
