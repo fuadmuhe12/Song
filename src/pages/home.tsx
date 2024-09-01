@@ -29,7 +29,7 @@ export default function Home() {
 
   }, [])
   if (songs.songs.length === 0) {
-    return <p className=" text-center fixed top-1/2 text-white left-1/3">No song is available</p>
+    return <p className=" text-center fixed top-1/2 text-white left-1/2">No song is available</p>
   }
   return (
     <div className="grid grid-cols-auto-fill gap-3 justify-items-center pb-24">
