@@ -32,7 +32,7 @@ export default function Home() {
     return <p className=" text-center fixed top-1/2 text-white left-1/3">No song is available</p>
   }
   return (
-    <div className="grid grid-cols-auto-fill gap-3  pb-24">
+    <div className="grid grid-cols-auto-fill gap-3 justify-items-center pb-24">
       {songs.songs.map((song, ind) => {
         return (
           <Song key={ind} {...song} />

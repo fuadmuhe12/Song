@@ -23,13 +23,13 @@ export default function RootLayout() {
 			<Loader />
 
 			<div className="SideBar basis-1/5 flex flex-col gap-y-2" style={{ height: height }}>
-				<div className="Logo flex items-center bg-Middle h-[50px] md:h-[80px] rounded-lg shrink-0">
-					<img src="./icons/logo.png" alt="logo" width={60} />
+				<div className="Logo flex justify-center items-center  bg-Middle h-[65px] md:h-[80px] rounded-lg shrink-0">
+					<img src="./icons/logo.png" alt="logo" className="w-10 md:w-12 lg:w-16" />
 					<span className="hidden lg:block text-white lg:text-3xl font-semibold">
 						Songs
 					</span>
 				</div>
-				<nav className="px-4 flex flex-col gap-y-4 py-4 bg-Middle rounded-lg h-full">
+				<nav className="px-4 flex flex-col gap-y-4 py-4 items-center lg:items-start bg-Middle rounded-lg h-full">
 					<NavLink to="/">
 						<div className="text-TextDark flex gap-x-2 hover:text-white">
 							<HomeIcon className="text-gray-400" />
@@ -48,7 +48,7 @@ export default function RootLayout() {
 				className={`RightSide w-full flex flex-col gap-2  overflow-auto`}
 				style={{ maxHeight: height }}
 			>
-				<div className="HeaderNav bg-Middle  w-full h-[50px] md:h-[80px] rounded-lg flex items-center pl-[20px] md:pl[50px] flex-shrink-0">
+				<div className="HeaderNav bg-Middle  w-full h-[65px] md:h-[80px] rounded-lg flex items-center pl-[20px] md:pl[50px] flex-shrink-0">
 					<div className="w-full">
 						<SearchFeature />
 					</div>
