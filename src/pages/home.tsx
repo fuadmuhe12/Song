@@ -28,7 +28,7 @@ export default function Home() {
 
 
   }, [])
-  if (songs.songs.length === 0) {
+  if (songs.songs.length === 0 && !songs.isLoading) {
     return <p className=" text-center fixed top-1/2 text-white left-1/2">No song is available</p>
   }
   return (
