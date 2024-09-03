@@ -32,7 +32,7 @@ export default function Home() {
     return <p className=" text-center fixed top-1/2 text-white left-1/2">No song is available</p>
   }
   return (
-    <div className="grid grid-cols-auto-fill gap-3 justify-items-center pb-24">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center items-center pb-24 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700  scrollbar-track-black">
       {songs.songs.map((song, ind) => {
         return (
           <Song key={ind} {...song} />

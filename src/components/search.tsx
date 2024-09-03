@@ -26,14 +26,25 @@ export default function SearchFeature() {
                 <SearchIcon className='text-black' />
                 <input type="text" {...register("search")} placeholder='What do you want to listen to?' className='outline-none w-full ' />
             </div>
-            <div>
-                <select id="categoryid" className='bg-white w-fit outline-none p-2' {...register("category")}>
-                    <option value={""}>All</option>
+            <div className="relative inline-block w-fit">
+                <select
+                    id="categoryid"
+                    className="bg-white text-gray-600 border border-gray-600 rounded-md p-2 w-full outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+                    {...register("category")}
+                >
+                    <option value="" className="bg-white text-gray-600">All</option>
                     {categoryData?.data?.map((category) => (
-                        <option key={category.id} value={category.id}>{category.name}</option>
+                        <option
+                            key={category.id}
+                            value={category.id}
+                            className="bg-white text-gray-600"
+                        >
+                            {category.name}
+                        </option>
                     ))}
                 </select>
             </div>
+
         </div>
     )
 }

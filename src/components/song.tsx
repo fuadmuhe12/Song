@@ -48,7 +48,7 @@ export default function Song({
 
 	return (
 		<div
-			className="max-w-52 p-4 bg-[#1E1E1E] hover:bg-[#272727] rounded-lg shadow-lg flex flex-col gap-y-4 relative"
+			className="max-w-52 p-4 flexg bg-[#1E1E1E] hover:bg-[#272727] rounded-lg shadow-lg flex flex-col gap-y-4 relative"
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
 		>

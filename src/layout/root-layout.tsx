@@ -18,11 +18,11 @@ export default function RootLayout() {
 	}, []);
 
 	return (
-		<div className="wrapper flex max-w-[1440px] mx-auto min-h-screen gap-2 px-1 py-2">
+		<div className="wrapper flex  mx-auto min-h-screen gap-2 px-1 py-2">
 			{player.isActive && <SongPlayer />}
 			<Loader />
 
-			<div className="SideBar basis-1/5 flex flex-col gap-y-2" style={{ height: height }}>
+			<div className="SideBar basis-[100px] md:basis-[200px] lg:basis-[300px] flex flex-col gap-y-2" style={{ height: height }}>
 				<div className="Logo flex justify-center items-center  bg-Middle h-[65px] md:h-[80px] rounded-lg shrink-0">
 					<img src="./icons/logo.png" alt="logo" className="w-10 md:w-12 lg:w-16" />
 					<span className="hidden lg:block text-white lg:text-3xl font-semibold">
@@ -45,16 +45,18 @@ export default function RootLayout() {
 				</nav>
 			</div>
 			<div
-				className={`RightSide w-full flex flex-col gap-2  overflow-auto`}
+				className={`RightSide w-full flex flex-col gap-2  `}
 				style={{ maxHeight: height }}
 			>
-				<div className="HeaderNav bg-Middle  w-full h-[65px] md:h-[80px] rounded-lg flex items-center pl-[20px] md:pl[50px] flex-shrink-0">
+				<div className="HeaderNav items-center bg-Middle  w-full h-[65px] md:h-[80px]  rounded-lg flex i pl-[20px] md:pl[50px] flex-shrink-0">
 					<div className="w-full">
 						<SearchFeature />
 					</div>
 				</div>
-				<div className="contentSpace rounded-lg  ">
-					<Outlet />
+				<div className="w-full flex flex-col items-center overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700  scrollbar-track-black py-2.5 lg:py-10 px-2.5 md:px-4">
+					<div className="contentSpace  max-w-[1440px]  rounded-lg   ">
+						<Outlet />
+					</div>
 				</div>
 			</div>
 		</div>
